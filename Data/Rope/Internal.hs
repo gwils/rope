@@ -34,19 +34,21 @@ module Data.Rope.Internal
 import Prelude hiding (head, last, length, foldl, null, length, splitAt, take, drop, break, span)
 import qualified Prelude
 
-import Control.Applicative hiding (empty)
+import Control.Applicative ((<$>))
 
 import Data.Data (Data(..), DataType, Constr, Fixity(..), mkConstr, mkDataType, constrIndex)
-import Data.Typeable (Typeable(..))
+import Data.Typeable (Typeable)
 
 import Data.FingerTree (ViewL(..),ViewR(..),viewl,viewr,(<|),(|>), Measured(..), (><))
 import qualified Data.FingerTree as FT (empty, split, null, singleton)
 
 import qualified Data.Foldable as F
 
-import Data.Monoid
+import Data.Monoid (Monoid (mappend,mempty))
 
 import Data.Rope.Body
+
+import Data.Semigroup (Semigroup ((<>)))
 
 import Data.Word (Word8)
 
@@ -70,9 +72,12 @@ import qualified Codec.Binary.UTF8.Generic as UTF8Bytes
 newtype Rope = Rope { body :: Body } 
     deriving (Show, Typeable)
 
+instance Semigroup Rope where
+    Rope t <> Rope t' = Rope (t >< t')
+
 instance Monoid Rope where
     mempty = empty
-    Rope t `mappend` Rope t' = Rope (t >< t')
+    mappend = (<>)
 
 instance Eq Rope where
     a == b = measure (body a) == measure (body b) 

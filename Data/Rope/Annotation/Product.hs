@@ -5,7 +5,7 @@ module Data.Rope.Annotation.Product
     , sndF
     ) where
 
-import Control.Applicative hiding (empty)
+import Control.Applicative (Applicative ((<*>), pure), (<$>))
 
 import Data.Monoid (mappend)
 import Data.Foldable (Foldable, foldMap)

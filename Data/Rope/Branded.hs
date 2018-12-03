@@ -1,7 +1,7 @@
 {-# LANGUAGE TypeOperators, Rank2Types, EmptyDataDecls, 
              MultiParamTypeClasses, FunctionalDependencies, 
              FlexibleContexts, FlexibleInstances, UndecidableInstances,
-             IncoherentInstances, OverlappingInstances #-}
+             IncoherentInstances #-}
 
 module Data.Rope.Branded
     ( Branded(..)
@@ -19,14 +19,14 @@ module Data.Rope.Branded
 
 import Prelude hiding (null, head, last, take, drop, span, break, splitAt, takeWhile, dropWhile)
 
-import Control.Applicative hiding (empty)
+import Control.Applicative (Applicative ((<*>), pure), (<$>))
 import Control.Monad.Writer.Class
 
 import Data.Rope.Branded.Comonad
-import Data.Monoid
+import Data.Monoid (Monoid (mappend, mempty))
+import Data.Semigroup (Semigroup ((<>)))
 import Data.FingerTree (Measured(..))
-import Data.Foldable (Foldable)
-import qualified Data.Foldable
+import Data.Foldable (Foldable (foldl, foldl1, foldMap, foldr, foldr1))
 import Data.Traversable (Traversable(traverse))
 import qualified Data.Rope.Internal as Rope
 import Data.Rope.Internal (Rope(..),Unpackable)
@@ -82,6 +82,9 @@ instance Monoid t => Monad (Branded Unsafe t) where
     return = Branded mempty
     Branded s a >>= f = Branded (s `mappend` s') b
         where Branded s' b = f a
+
+instance (Semigroup t, Semigroup m) => Semigroup (Branded Unsafe t m) where
+    Branded r t <> Branded s u = Branded (r <> s) (t <> u)
 
 instance (Monoid t, Monoid m) => Monoid (Branded Unsafe t m) where
     mempty = Branded mempty mempty

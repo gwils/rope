@@ -12,14 +12,18 @@ module Data.Rope.Body
 import Prelude hiding (null, length)
 import Data.FingerTree (FingerTree,(<|),(|>),Measured,measure,empty, singleton)
 import Data.Data
-import Data.Monoid
+import Data.Semigroup (Semigroup ((<>)))
+import Data.Monoid (Monoid (mappend,mempty))
 import Data.ByteString (ByteString, null, length)
 
 newtype Offset = Offset { getOffset :: Int } deriving (Eq,Ord,Num,Show,Read,Enum,Data,Typeable)
 
+instance Semigroup Offset where
+    (<>) = (+)
+
 instance Monoid Offset where
     mempty = 0
-    mappend = (+)
+    mappend = (<>)
 
 newtype Chunk = Chunk { unchunk :: ByteString } deriving (Eq,Ord,Show,Read,Data,Typeable)
 

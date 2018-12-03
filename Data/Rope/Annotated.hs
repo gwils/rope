@@ -2,7 +2,7 @@
              MultiParamTypeClasses, FunctionalDependencies, 
              FlexibleContexts, FlexibleInstances, UndecidableInstances,
              TypeFamilies,  IncoherentInstances, 
-             OverlappingInstances, CPP #-}
+             CPP #-}
 
 #if __GLASGOW_HASKELL__ >= 708
 {-# LANGUAGE AllowAmbiguousTypes #-}
@@ -57,7 +57,7 @@ module Data.Rope.Annotated
     ) where
 
 import Prelude hiding (null, head, last, take, drop, span, break, splitAt, takeWhile, dropWhile)
-import Data.Monoid
+import Data.Monoid (Monoid (mappend))
 
 import qualified Data.Rope.Internal as Rope
 
